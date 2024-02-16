@@ -1,4 +1,4 @@
-// import React,{useState} from 'react'
+import React,{FormEvent, useEffect, useRef, useState} from 'react'
 import { MdDelete } from "react-icons/md";
 import { FaCheck } from "react-icons/fa6";
 import { CiEdit } from "react-icons/ci";
@@ -12,7 +12,8 @@ interface Props{
 
 const Todocomp= ({todoContent,todos,setTodos}:Props) => {
 
-  // const [isDone,setIsDone]=useState<boolean>(false);
+  const [isEditon,setIsEditon]=useState<boolean>(false);
+  const [newTodo,setNewTodo]=useState<string>(todoContent.todo);
 
   const handleComplete=(id:number)=>{
       console.log("Hello from compete")
@@ -26,19 +27,45 @@ const Todocomp= ({todoContent,todos,setTodos}:Props) => {
       console.log(todos);
   }
 
+
+  const handleEditTodo=(e:FormEvent,id:number)=>{
+      e.preventDefault();  
+      setTodos(
+        todos.map((todo)=>todo.id===id?{...todo,todo:newTodo}:todo)
+      )
+      setIsEditon(false);
+  }
+
+  const editInputRef=useRef<HTMLInputElement>(null);
+  useEffect(()=>{
+    editInputRef.current?.focus();
+  },[isEditon])
    
   return ( 
-    <div className='flex justify-between bg-gray-200 px-2 py-2 rounded-lg transition-all duration-500 hover:scale-105'>
-       {todoContent.isCompleted? 
+    <div className='flex justify-between bg-gray-300 px-2 py-2 rounded-lg transition-all duration-500 hover:scale-105'>
+    {
+       todoContent.isCompleted? 
        <div className='flex items-center justify-center'>
           <FaCheck  className='text-[20px] text-green-700 cursor-pointer'/>
           <p className='text-green-700 '>{todoContent.todo}</p>
         </div>
         :
         <div className='flex'>
-            <p className='text-violet-700'>{todoContent.todo}</p>
+          { 
+             isEditon?
+             <form onSubmit={(e)=>handleEditTodo(e,todoContent.id)}>
+               <input 
+                ref={editInputRef}
+                onChange={(e)=>setNewTodo(e.target.value)}  
+                value={newTodo} type="text"  
+                className='px-2 outline-none rounded'
+              />
+             </form>
+             :
+            <p className='text-violet-700'>{todoContent.todo}</p> 
+          }
         </div>
-       }
+    }
          
        <div className='flex min-w-[20%] justify-between'>
         {
@@ -62,10 +89,10 @@ const Todocomp= ({todoContent,todos,setTodos}:Props) => {
         {
            todoContent.isCompleted? 
            <button>
-              <CiEdit className='text-[25px] text-green-700 cursor-pointer'/>
+            <CiEdit onClick={()=>setIsEditon(!isEditon)} className='text-[25px] text-green-700 cursor-pointer'/>
            </button>
             :
-            <CiEdit className='text-[25px] text-violet-700 cursor-pointer'/> 
+            <CiEdit  onClick={()=>setIsEditon(!isEditon)} className='text-[25px] text-violet-700 cursor-pointer'/> 
         }
         
          
