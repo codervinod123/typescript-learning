@@ -1,13 +1,26 @@
-import Box from "./components/Box"
+import React,{useState} from "react"
+import InputComp from "./components/InputComp"
+import { Todo } from "./utils/Models";
+import TodoList from "./components/TodoList";
 
-const App = () => {
+const App:React.FC = () => {
+
+  const [todo,setTodo]=useState<string>("");
+  const [todos,setTodos]=useState<Todo[]>([]);
+
+  const handleSubmit=(e: React.FormEvent)=>{
+      e.preventDefault();
+      if(todo){
+         setTodos((prev)=>[...prev,{id:Date.now(),todo:todo,isCompleted:false}]);
+         setTodo("");
+      }
+     
+  }
+  
   return (
-    <div>
-        <Box 
-            heading="Learn Typescript" 
-            title="Learning with practice make it very easy to learn new technology"
-            func1={()=>{alert("Hello Typescript")}}
-            />
+    <div className="py-8 relative flex flex-col items-center h-[100vh] w-[100vw] bg-gray-800">
+      <InputComp todo={todo} setTodo={setTodo} handleSubmit={handleSubmit}/>
+      <TodoList />
     </div>
   )
 }
