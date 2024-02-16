@@ -20,7 +20,7 @@ const App:React.FC = () => {
   return (
     <div className="py-8 relative flex flex-col items-center h-[100vh] w-[100vw] bg-gray-800">
       <InputComp todo={todo} setTodo={setTodo} handleSubmit={handleSubmit}/>
-      <TodoList />
+      <TodoList todos={todos} setTodos={setTodos}/>
     </div>
   )
 }
