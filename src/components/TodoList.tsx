@@ -14,7 +14,7 @@ const TodoList = ({todos,setTodos}:Props) => {
          {
             todos.map((data)=>{
                 return(
-                    <Todocomp todoContent={data} todos={todos} setTodos={setTodos}/>
+                    <Todocomp key={data.id} todoContent={data} todos={todos} setTodos={setTodos}/>
                 )
             })
          }
